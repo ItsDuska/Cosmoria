@@ -138,9 +138,9 @@ b8 createVulkInstance(void)
     
     VkApplicationInfo appInfo;
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	appInfo.pApplicationName = "CelestiaWorks";
+	appInfo.pApplicationName = "Cosmoria";
 	appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-	appInfo.pEngineName = "CelestiaWorks Engine";
+	appInfo.pEngineName = "Cosmoria Engine";
 	appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
 	appInfo.apiVersion = VK_API_VERSION_1_0;
     appInfo.pNext = NULL;
