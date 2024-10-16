@@ -1,5 +1,5 @@
-#ifndef CREATE_ENGINE
-#define CREATE_ENGINE
+#ifndef ENGINE_CORE
+#define ENGINE_CORE
 
 void createEngine(void);
 void runEngine(void);

@@ -1,6 +1,10 @@
-#include "createEngine.h"
+#include "engineCore.h"
 #include "window/window.h"
+#include "VulkanAPI/vulkanDevice.h"
+
 #include <stdio.h>
+
+static b8 initFailed = false;
 
 void createEngine(void)
 {
@@ -15,20 +19,35 @@ void createEngine(void)
     createWindow(&info);
 
     free(info.name);
+
+
+    if (!createVulkInstance())
+    {
+        initFailed = true;
+    }
+
 }
 
 void runEngine(void)
 {
+    if (initFailed)
+    {
+        printf("guuuuuh\n");
+        return;
+    }
+    
     while (processMessage())
     {
 
     }
-
-    destroyWindow();
-    printf("exiting program\n");
+    
 }
 
 void destroyEngine(void)
 {
+    destroyVulkanInstance();
 
+    destroyWindow();
+
+    printf("exiting program\n");
 }

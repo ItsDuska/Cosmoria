@@ -24,4 +24,14 @@ typedef unsigned char      b8;    // Boolean type (1 byte)
 #define true  1
 #define false 0
 
+// Custom return states
+#define COSMORIA_SUCCESS 1
+#define COSMORIA_FAILURE 0
+
+// Util defines
+
+// Count the number of elements in array.
+#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
+
+
 #endif

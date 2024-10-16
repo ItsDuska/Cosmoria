@@ -1,7 +1,7 @@
 #ifndef COSMORIA_WINDOW
 #define COSMORIA_WINDOW
 
-#include "../../config/defines.h"
+#include "../../util/defines.h"
 #include "Windows.h"
 
 typedef struct WindowInfo
@@ -24,7 +24,7 @@ typedef struct WindowHandle
 
 void createWindow(WindowInfo *info);
 
-u8 processMessage(void);
+b8 processMessage(void);
 
 void destroyWindow(void);
 

@@ -96,7 +96,7 @@ void createWindow(WindowInfo *info)
     free(nameWide);
 }
 
-u8 processMessage(void)
+b8 processMessage(void)
 {
     MSG msg;
 		

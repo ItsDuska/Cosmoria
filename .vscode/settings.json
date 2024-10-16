@@ -5,6 +5,7 @@
         "format": "c",
         "xutility": "c",
         "window.h": "c",
-        "createengine.h": "c"
+        "createengine.h": "c",
+        "enginecore.h": "c"
     }
 }
