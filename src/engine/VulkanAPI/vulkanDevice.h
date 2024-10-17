@@ -6,6 +6,9 @@
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 
+
+struct WindowAPICore;
+
 typedef struct VulkanContext
 {
     VkSurfaceKHR surface;
@@ -17,9 +20,8 @@ typedef struct VulkanContext
 } VulkanContext;
 
 
+b8 createVulkanContext(struct WindowAPICore* window);
 
-b8 createVulkInstance(void);
-
-void destroyVulkanInstance(void);
+void destroyVulkanContext(void);
 
 #endif

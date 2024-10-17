@@ -16,12 +16,17 @@ void createEngine(void)
     info.name = (char*)malloc(strlen(originalName) + 1);
     strcpy(info.name, originalName);
 
-    createWindow(&info);
+    if (!createWindow(&info))
+    {
+        initFailed = true;
+        free(info.name);
+        return; 
+    }
 
     free(info.name);
 
 
-    if (!createVulkInstance())
+    if (!createVulkanContext(getWindowHandlePtr()))
     {
         initFailed = true;
     }
@@ -45,7 +50,7 @@ void runEngine(void)
 
 void destroyEngine(void)
 {
-    destroyVulkanInstance();
+    destroyVulkanContext();
 
     destroyWindow();
 

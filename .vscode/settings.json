@@ -6,6 +6,8 @@
         "xutility": "c",
         "window.h": "c",
         "createengine.h": "c",
-        "enginecore.h": "c"
+        "enginecore.h": "c",
+        "logger.h": "c",
+        "stdio.h": "c"
     }
 }

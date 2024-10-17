@@ -1,6 +1,9 @@
 #include "vulkanDevice.h"
 #include <stdio.h>
 
+#include "../window/windowDefines.h"
+#include "util/logger/logger.h"
+
 // TODO: TEE JOTAIN TÄLLE. Includaa tää kun on debug build vaan.
 #define ENABLE_VALIDATION_LAYER
 
@@ -17,6 +20,7 @@ typedef struct LocalVkContext
 {
     VkInstance instance;
     VkDebugUtilsMessengerEXT dbgMessenger;
+    VulkanContext context;
 } LocalVkContext;
 
 
@@ -30,7 +34,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vulkDebugCallback(
 	void* pUserData)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, 6);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_INTENSITY);
 	printf("VALIDATION LAYER: ");
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	printf("%s\n",pCallbackData->pMessage);
@@ -60,7 +64,7 @@ static b8 supportVulkLayers(void)
 
     if (!layerFound)
     {
-        printf("NO VALIDATION LAYERS FOUND?\n");
+        cosmoriaLogMessage(COSMORIA_LOG_ERROR,"NO VALIDATION LAYERS FOUND?\n");
         return COSMORIA_FAILURE;
     }
 
@@ -76,7 +80,7 @@ static void getSupportedExtensions(void)
 	const VkExtensionProperties* extensions = (VkExtensionProperties*)malloc(extensionCount * sizeof(VkExtensionProperties));
 	vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, extensions);
 
-	printf("Available extensions:\n");
+    cosmoriaLogMessage(COSMORIA_LOG_INFO,"Available extensions:");
 
 	for (u32 i = 0; i < extensionCount; i++)
 	{
@@ -122,15 +126,28 @@ static void destroyDebugUtilsMessengerEXT(VkInstance instance,
 
 #endif
 
-b8 createVulkInstance(void)
+
+static b8 pickVulkPhysicalDevice(void)
+{
+    u32 deviceCount = 0;
+    vkEnumeratePhysicalDevices(localVulkCotext->instance, &deviceCount, NULL);
+
+    if (deviceCount == 0)
+    {
+
+    }
+
+
+}
+
+
+
+static b8 createVulkInstance(void)
 {
     if (VALIDATION_LAYERS && !supportVulkLayers())
     {
         return COSMORIA_FAILURE;
     }
-
-    localVulkCotext = (LocalVkContext*)malloc(sizeof(LocalVkContext));
-    memset(localVulkCotext, 0, sizeof(LocalVkContext));
 
 #ifdef ENABLE_VALIDATION_LAYER
     getSupportedExtensions();
@@ -189,7 +206,7 @@ b8 createVulkInstance(void)
 
     if (vkCreateInstance(&createInfo, NULL, &localVulkCotext->instance) != VK_SUCCESS)
 	{
-        printf("ERROR: Failed to create Instance!\n");
+        cosmoriaLogMessage(COSMORIA_LOG_ERROR,"Failed to create Instance!\n");
         return COSMORIA_FAILURE;
     }
 
@@ -200,7 +217,7 @@ b8 createVulkInstance(void)
         &localVulkCotext->dbgMessenger)
         != VK_SUCCESS)
 	{
-        printf("ERROR: Failed to set up debug messenger!\n");
+        cosmoriaLogMessage(COSMORIA_LOG_ERROR,"Failed to set up debug messenger!\n");
         return COSMORIA_FAILURE;
 	}
 #endif
@@ -208,12 +225,61 @@ b8 createVulkInstance(void)
     return COSMORIA_SUCCESS;
 }
 
-void destroyVulkanInstance(void)
+static b8 createVulkSurface(WindowAPICore* window)
 {
+    VkWin32SurfaceCreateInfoKHR info;
+	info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	info.pNext = NULL;
+	info.flags = 0;
+	info.hinstance = window->hInstance;
+	info.hwnd = window->hWnd;
+
+	if (vkCreateWin32SurfaceKHR(localVulkCotext->instance, &info, NULL, &localVulkCotext->context.surface) != VK_SUCCESS)
+	{
+        printf("Failed to create Window Surface for Win32!\n");
+        return COSMORIA_FAILURE;
+	}
+
+    return COSMORIA_SUCCESS;
+}
+
+// -----------------------
+// MAIN STUFF FROM HEADER:
+// -----------------------
+
+b8 createVulkanContext(WindowAPICore *window)
+{
+    localVulkCotext = (LocalVkContext*)malloc(sizeof(LocalVkContext));
+    memset(localVulkCotext, 0, sizeof(LocalVkContext));
+
+    if (!createVulkInstance())
+    {
+        return COSMORIA_FAILURE;
+    }
+
+    if (!createVulkSurface(window))
+    {
+        return COSMORIA_FAILURE;
+    }
+
+    return COSMORIA_SUCCESS;
+}
+
+void destroyVulkanContext(void)
+{
+    if (localVulkCotext == NULL)
+    {
+        return;
+    }
+
 #ifdef ENABLE_VALIDATION_LAYER
     destroyDebugUtilsMessengerEXT(localVulkCotext->instance, localVulkCotext->dbgMessenger, NULL);
 #endif
+
+    vkDestroySurfaceKHR(localVulkCotext->instance, localVulkCotext->context.surface, NULL);
     vkDestroyInstance(localVulkCotext->instance, NULL);
 
     free(localVulkCotext);
 }
+
+

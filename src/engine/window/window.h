@@ -1,31 +1,16 @@
 #ifndef COSMORIA_WINDOW
 #define COSMORIA_WINDOW
 
-#include "../../util/defines.h"
-#include "Windows.h"
-
-typedef struct WindowInfo
-{
-    const char* name;
-    u32 width;
-    u32 height;
-} WindowInfo;
+#include "windowDefines.h"
 
 
-typedef struct WindowHandle
-{
-    HINSTANCE hInstance;
-    HWND hWnd;
-    const wchar_t* clss_name;
-    u32 width;
-    u32 height;
-} WindowHandle;
-
-
-void createWindow(WindowInfo *info);
+b8 createWindow(WindowInfo *info);
 
 b8 processMessage(void);
 
 void destroyWindow(void);
+
+
+WindowAPICore* getWindowHandlePtr(void);
 
 #endif
