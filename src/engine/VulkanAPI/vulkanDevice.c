@@ -16,6 +16,7 @@ const b8 VALIDATION_LAYERS = false;
 
 const char* validationLayer = "VK_LAYER_KHRONOS_validation";
 
+
 typedef struct LocalVkContext
 {
     VkInstance instance;
@@ -25,7 +26,6 @@ typedef struct LocalVkContext
 
 
 static LocalVkContext* localVulkContext;
-
 
 
 b8 queueFamilyIsComplete(QueueFamilyIndices family)
@@ -160,7 +160,7 @@ static b8 supportVulkLayers(void)
     u32 layerCount;
 	vkEnumerateInstanceLayerProperties(&layerCount, NULL);
 
-	const VkLayerProperties* availableLayers = (VkLayerProperties*)malloc(layerCount * sizeof(VkLayerProperties));
+	VkLayerProperties* availableLayers = (VkLayerProperties*)malloc(layerCount * sizeof(VkLayerProperties));
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers);
 
     b8 layerFound = false;
@@ -302,6 +302,25 @@ static b8 pickVulkPhysicalDevice(void)
         return COSMORIA_FAILURE;
     }
 
+    return COSMORIA_SUCCESS;
+}
+
+
+static b8 createVulCmdPool(void)
+{
+    QueueFamilyIndices queueFamilyIndices = findQueueFamilies(localVulkContext->context.physicalDevice);
+
+	VkCommandPoolCreateInfo poolInfo = {0};
+
+	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+	poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily;
+
+	if (vkCreateCommandPool(localVulkContext->context.device, &poolInfo, NULL, &localVulkContext->context.commandPool) != VK_SUCCESS)
+	{
+        cosmoriaLogMessage(COSMORIA_FAILURE, "Failed to create command pool!\n");
+        return COSMORIA_FAILURE;
+	}
     return COSMORIA_SUCCESS;
 }
 
@@ -497,6 +516,11 @@ b8 createVulkanContext(WindowAPICore *window)
         return COSMORIA_FAILURE;
     }
 
+    if (!createVulCmdPool())
+    {
+        return COSMORIA_FAILURE;
+    }
+
     return COSMORIA_SUCCESS;
 }
 
@@ -507,6 +531,7 @@ void destroyVulkanContext(void)
         return;
     }
 
+    vkDestroyCommandPool(localVulkContext->context.device,localVulkContext->context.commandPool, NULL);
     vkDestroyDevice(localVulkContext->context.device, NULL);
     vkDestroySurfaceKHR(localVulkContext->instance, localVulkContext->context.surface, NULL);
 
