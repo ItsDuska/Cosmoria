@@ -28,6 +28,27 @@ typedef unsigned char      b8;    // Boolean type (1 byte)
 #define COSMORIA_SUCCESS 1
 #define COSMORIA_FAILURE 0
 
+
+// Vectors
+
+typedef struct Vec2f
+{
+    f32 x;
+    f32 y;
+} Vec2f;
+
+typedef struct Vec2i
+{
+    i32 x;
+    i32 y;
+} Vec2i;
+
+typedef struct Vec2u
+{
+    u32 x;
+    u32 y;
+} Vec2u;
+
 // Util defines
 
 // Count the number of elements in array.

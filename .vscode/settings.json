@@ -8,6 +8,11 @@
         "createengine.h": "c",
         "enginecore.h": "c",
         "logger.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "xlocale": "cpp",
+        "math.h": "c",
+        "windowdefines.h": "c",
+        "span": "c",
+        "type_traits": "c"
     }
 }

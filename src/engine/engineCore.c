@@ -1,6 +1,7 @@
 #include "engineCore.h"
 #include "window/window.h"
 #include "VulkanAPI/vulkanDevice.h"
+#include "VulkanAPI/swapChain.h"
 
 #include <stdio.h>
 
@@ -25,8 +26,13 @@ void createEngine(void)
 
     free(info.name);
 
+    WindowAPICore* windowPtr = getWindowHandlePtr();
+    if (!createVulkanContext(windowPtr))
+    {
+        initFailed = true;
+    }
 
-    if (!createVulkanContext(getWindowHandlePtr()))
+    if (!createVulkSwapChainContext(windowPtr))
     {
         initFailed = true;
     }
@@ -50,6 +56,7 @@ void runEngine(void)
 
 void destroyEngine(void)
 {
+    destroySwapChain();
     destroyVulkanContext();
 
     destroyWindow();

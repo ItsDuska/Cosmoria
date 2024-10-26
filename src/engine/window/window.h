@@ -10,6 +10,7 @@ b8 processMessage(void);
 
 void destroyWindow(void);
 
+Vec2u getWindowSize(void);
 
 WindowAPICore* getWindowHandlePtr(void);
 

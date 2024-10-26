@@ -34,6 +34,7 @@ typedef struct VulkanContext
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
 	VkCommandPool commandPool;
+	u32 maxFramesInFlight;
 } VulkanContext;
 
 
@@ -44,6 +45,7 @@ void destroyVulkanContext(void);
 
 b8 queueFamilyIsComplete(QueueFamilyIndices family);
 
+VulkanContext* getVulkanContext(void);
 
 SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 

@@ -14,6 +14,10 @@ const b8 VALIDATION_LAYERS = false;
 #endif
 
 
+
+//TODO: Tee deque joka poistaa vulkan objetkeja järjestyksessä.
+
+
 const char* validationLayer = "VK_LAYER_KHRONOS_validation";
 
 
@@ -31,6 +35,11 @@ static LocalVkContext* localVulkContext;
 b8 queueFamilyIsComplete(QueueFamilyIndices family)
 {
     return family.graphicsFamily != UINT32_MAX && family.presentFamily != UINT32_MAX;
+}
+
+VulkanContext *getVulkanContext(void)
+{
+    return &localVulkContext->context;
 }
 
 SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device)
@@ -63,7 +72,7 @@ void destroySwapChainSupportDetails(SwapChainSupportDetails *data)
     free(data->presentModes);
 }
 
-static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
+QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
 {
     QueueFamilyIndices indices;
     indices.graphicsFamily = UINT32_MAX;
@@ -520,6 +529,9 @@ b8 createVulkanContext(WindowAPICore *window)
     {
         return COSMORIA_FAILURE;
     }
+    
+    // this value is hardcoded right now. Just change this if needed. :D
+    localVulkContext->context.maxFramesInFlight = 2;
 
     return COSMORIA_SUCCESS;
 }

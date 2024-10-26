@@ -22,8 +22,8 @@ LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 b8 createWindow(WindowInfo *info)
 {
     localHandle = malloc(sizeof(WindowHandle));
-    localHandle->width = info->width;
-    localHandle->height = info->height;
+    localHandle->size.x = info->width;
+    localHandle->size.y = info->height;
 
     wchar_t *CLASS_NAME = L"COSMORIA_CLASS";
     localHandle->clss_name = malloc((lstrlenW(CLASS_NAME) + 1) * sizeof(wchar_t));
@@ -125,6 +125,12 @@ void destroyWindow(void)
     free(localHandle->clss_name);
     free(localHandle);
 }
+
+Vec2u getWindowSize(void)
+{
+    return localHandle->size;
+}
+
 
 WindowAPICore *getWindowHandlePtr(void)
 {

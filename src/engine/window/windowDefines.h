@@ -23,8 +23,7 @@ typedef struct WindowHandle
 {
     WindowAPICore handle;
     const wchar_t* clss_name;
-    u32 width;
-    u32 height;
+    Vec2u size;
 } WindowHandle;
 
 #endif
