@@ -2,6 +2,7 @@
 #include "window/window.h"
 #include "VulkanAPI/vulkanDevice.h"
 #include "VulkanAPI/swapChain.h"
+#include "util/timer.h"
 
 #include <stdio.h>
 
@@ -41,6 +42,10 @@ void createEngine(void)
 
 void runEngine(void)
 {
+    f64 dt;
+    f64 targetFPS = 60.0;
+    CTimer timer;
+
     if (initFailed)
     {
         printf("guuuuuh\n");
@@ -49,7 +54,11 @@ void runEngine(void)
     
     while (processMessage())
     {
+        startTimer(&timer);
 
+        //do stuff;
+        dt = getDeltaTime(&timer);
+        sleepForFPS(dt,targetFPS);
     }
     
 }

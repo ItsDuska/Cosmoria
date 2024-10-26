@@ -314,7 +314,6 @@ static b8 pickVulkPhysicalDevice(void)
     return COSMORIA_SUCCESS;
 }
 
-
 static b8 createVulCmdPool(void)
 {
     QueueFamilyIndices queueFamilyIndices = findQueueFamilies(localVulkContext->context.physicalDevice);
